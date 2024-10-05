@@ -1,0 +1,17 @@
+{
+    "name": "Retro Bowl",
+    "short_name": "RetroBowl",
+    "description": "Play Retro Bowl unblocked online for free! 🏈 Experience retro-style American football action. Manage your team, call plays, and lead them to victory!",
+    "scope": "/",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#8b4513",
+    "theme_color": "#8b4513",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.webp",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}
