@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Rewarded Ad</title>
+    <script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3720612299124178"></script>
+
+    <style>
+        #ads {
+            display: none;
+        }
+        #successMessage {
+            display: none;
+            color: green;
+            font-size: 18px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ads"> <!-- This is where your ads will show up -->
+        Showing Ads...
+    </div>
+    
+    <div id="successMessage">
+        Ad successfully completed! You have earned your reward.
+    </div>
+
+    <button onclick="showRewardedAd()">Show Rewarded Ad</button>
+
+    <script>
+        // Ad configuration setup
+        window.adsbygoogle = window.adsbygoogle || [];
+        var adBreak = adConfig = function (o) { adsbygoogle.push(o); };
+
+        function showRewardedAd() {
+            var show_ads = (typeof adBreak !== 'undefined') ? true : false;
+
+            var domain = 'retrobowl.info';
+            if (window != window.top && document.referrer != null) {
+                url = document.referrer;
+                ref = url.match(/:\/\/(.[^/]+)/)[1];
+                if (ref != domain) { show_ads = false; }
+            }
+
+            if (show_ads) {
+                console.log("show ads");
+                // Game start logic
+                let adConfigPromise =
+                    new Promise((resolve, reject) => adConfig({
+                        preloadAdBreaks: 'on',
+                        onReady: () => resolve(true)
+                    }));
+                let timeoutPromise =
+                    new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            resolve(false);
+                        }, 2000);
+                    });
+
+                Promise.race([
+                    adConfigPromise,
+                    timeoutPromise
+                ]).then((shouldShowPreRoll) => {
+                    if (shouldShowPreRoll) {
+                        showPreRoll();
+                    } else {
+                        hideAds();
+                    }
+                });
+            } else {
+                console.log("no show ads");
+                hideAds();
+            }
+        }
+
+        function hideAds() {
+            document.getElementById("ads").style.display = "none";
+            document.getElementById("successMessage").style.display = "none";
+        }
+
+        function showPreRoll() {
+            document.getElementById("ads").style.display = "block"; // Show ad area
+            adBreak({
+                type: 'rewarded',
+                adBreakDone: onAdComplete // Called after the ad completes
+            });
+        }
+
+        function onAdComplete() {
+            hideAds(); // Hide the ad area
+            document.getElementById("successMessage").style.display = "block"; // Show success message
+        }
+
+        function checkIfIframe() {
+            if (window.self !== window.top) {
+                hideAds();
+            }
+        }
+
+        // Run the check when the page loads
+        window.onload = checkIfIframe;
+    </script>
+
+</body>
+</html>
